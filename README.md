@@ -1,74 +1,96 @@
-# React + TypeScript + Vite
+# Local Habit Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A client-side React application designed to track daily habits, calculate streaks dynamically, and persist data locally. This project serves as **Project 1** in a progressive frontend engineering roadmap, focusing heavily on component architecture, React state immutability, and derived state.
 
-Currently, two official plugins are available:
+## 🛠 Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+*   **Framework:** [React 18](https://react.dev/)
+*   **Build Tool:** [Vite](https://vitejs.dev/)
+*   **Language:** [TypeScript](https://www.typescriptlang.org/)
+*   **UI Library:** [Chakra UI](https://chakra-ui.com/) (Chosen for a rapid, CSS-free, accessible design system)
+*   **Persistence:** Browser `localStorage`
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🧠 Architectural Decisions
 
-## Expanding the ESLint configuration
+### 1. The Data Model (Time-Series over Counters)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Instead of storing a fragile `streak: 5` integer that breaks if a user misses a day without logging in, the app stores an array of timestamp strings (`completedDates`).
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+**Why?** This makes the data idempotent. Streaks can be recalculated dynamically based on the current date, ensuring accuracy regardless of when the user opens the app.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```typescript
+type Habit = {
+  id: string;
+  title: string;
+  createdAt: string;
+  completedDates: string[]; // e.g., ["2026-06-12", "2026-06-13"]
+};
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. Component Purity & State Management
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+The application strictly follows the **Single Responsibility Principle** and **unidirectional data flow**:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **App.tsx**: The single source of truth. Manages the global habits state and handles persistence using `useEffect` with `localStorage`.
+
+- **HabitForm.tsx**: A strictly controlled component. Manages its own temporary local text state and bubbles the payload up via the `onAdd` callback.
+
+- **HabitList.tsx**: A pure presentation component responsible only for iterating over the habits data array and rendering habit items.
+
+- **HabitCard.tsx**: Receives a single `Habit` object as a prop. Calculates derived state (such as the current streak) on the fly without maintaining redundant state variables.
+
+### 3. Immutability Strictness
+
+All state updates—including adding a habit and toggling completion dates—are performed using strict immutable update patterns. New array and object references are returned instead of mutating existing state, preventing common React rendering bugs and ensuring predictable state transitions.
+
+---
+
+# 🚀 Getting Started
+
+## Prerequisites
+
+- Node.js (v18 or higher)
+- npm or pnpm
+
+## Installation
+
+### 1. Clone the repository and navigate into the project directory
+
+```bash
+git clone <your-repo-url>
+cd habit-tracker
 ```
-# Habit-Tracker
+
+### 2. Install dependencies
+
+```bash
+npm install
+```
+
+### 3. Start the Vite development server
+
+```bash
+npm run dev
+```
+
+### 4. Open the application
+
+Navigate to:
+
+```text
+http://localhost:5173
+```
+
+---
+
+<FollowUp
+  label="Ready to tackle the HabitForm?"
+  query="I've added the README. Let's move back to Milestone 2: Here is my code for making the HabitForm a controlled component."
+/>
+
+
+
+
+
