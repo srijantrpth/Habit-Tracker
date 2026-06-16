@@ -1,5 +1,5 @@
 import { CheckboxCard } from "@chakra-ui/react"
-import { Habit } from "../App"
+import type{ Habit } from "../App"
 
 type HabitCardProps = {
   habit: Habit;

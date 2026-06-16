@@ -1,11 +1,17 @@
 
 import { HabitCard } from "./HabitCard"
-export const HabitList = ({habits,onToggle})=>{
+
+import type { Habit } from "@/App"
+export type HabitListType = {
+    habits: Habit[];
+    onToggle: (id: string,  dateStr: string) => void
+};
+export const HabitList = ({habits,onToggle}:HabitListType)=>{
 return (
     <>
-    {habits.map((habit)=>{
-<HabitCard habit key={habit.id}/>
-    })}
+    {habits.map((habit:Habit)=>(
+        <HabitCard habit={habit} onToggle={onToggle} key={habit.id}/>
+    ))}
     </>
 )
 }
