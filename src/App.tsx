@@ -24,7 +24,11 @@ const [habits, setHabits] = useState<Habit[]>([{
 const handleAdd = (title: string)=> {
   setHabits((habits)=>[...habits, {id: crypto.randomUUID(),title: title, createdAt: new Date().toISOString().split('T')[0], completedDates: []}])
 }
-const handleToggle = (id: string,dateStr: string)=> console.log(`Toggling: ${id}, ${dateStr}`)
+const handleToggle = (id: string,dateStr: string)=> {
+  setHabits((prevHabits)=>{
+    return prevHabits.map((habit)=>habit.id === id ? (habit.completedDates.includes(dateStr) ? {...habit,completedDates: habit.completedDates.filter((item)=>item!=dateStr)}: {...habit, completedDates: [...habit.completedDates, dateStr]}) : habit)
+  })
+}
 
   return (
     <>

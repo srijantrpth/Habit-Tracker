@@ -7,8 +7,10 @@ type HabitCardProps = {
 };
 
 export const HabitCard = ({ habit, onToggle }: HabitCardProps) => {
+  const todayStr = new Date().toISOString().split('T')[0]
+
   return (
-    <CheckboxCard.Root>
+    <CheckboxCard.Root checked={habit.completedDates.includes(todayStr)} onCheckedChange={()=>(onToggle(habit.id, todayStr))}>
       <CheckboxCard.HiddenInput />
       <CheckboxCard.Control>
         <CheckboxCard.Content>
