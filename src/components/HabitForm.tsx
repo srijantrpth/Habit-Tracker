@@ -2,10 +2,9 @@ import { useState } from 'react';
 import {
   FormControl,
   FormLabel,
-  FormErrorMessage,
-  FormHelperText, Input, Button
-} from '@chakra-ui/react'
-
+  FormHelperText
+} from '@chakra-ui/form-control'
+import {Input, Button} from '@chakra-ui/react'
 export type HabitFormType = {
 onAdd: (title: string)=>void
 };
