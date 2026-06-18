@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { HabitForm } from './components/HabitForm'
 import { HabitList } from './components/HabitList'
 
@@ -13,13 +13,16 @@ function App() {
 
 
   
-const [habits, setHabits] = useState<Habit[]>([{
-  id: "123",
-  title: "Drink Water",
-  createdAt: "2026-06-06",
-  completedDates: ["2026-06-06","2026-06-12","2026-06-18"]
-
-}])
+const [habits, setHabits] = useState<Habit[]>( ()=>{
+ const response =  localStorage.getItem("habits_data")
+if(response){
+  return JSON.parse(response)
+}
+return []
+} )
+useEffect(()=>{
+localStorage.setItem("habits_data", JSON.stringify(habits))
+},[habits])
 
 const handleAdd = (title: string)=> {
   setHabits((habits)=>[...habits, {id: crypto.randomUUID(),title: title, createdAt: new Date().toISOString().split('T')[0], completedDates: []}])
