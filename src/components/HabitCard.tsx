@@ -6,6 +6,9 @@ type HabitCardProps = {
   onToggle: (id: string, dateStr: string) => void;
 };
 
+
+
+
 export const HabitCard = ({ habit, onToggle }: HabitCardProps) => {
   const todayStr = new Date().toISOString().split('T')[0]
 
